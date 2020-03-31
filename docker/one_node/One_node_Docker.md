@@ -34,7 +34,7 @@ Podemos comprobar el estado de la sigueinte forma:
 
 ```bash
     ## Comprobar estado de los contedores
-    vthot4@labcell:~/sawtooth$ docker-compose -f sawtooth-default.yaml ps
+    vthot4@labcell:~/sawtooth-lab/one_node$ docker-compose -f sawtooth-default.yaml ps
                 Name                              Command               State                Ports              
 ----------------------------------------------------------------------------------------------------------------
 sawtooth-devmode-engine-rust-default   devmode-engine-rust -C tcp ...   Up                                      
@@ -46,10 +46,10 @@ sawtooth-validator-default             bash -c sawadm keygen && s ...   Up      
 sawtooth-xo-tp-python-default          xo-tp-python -vv -C tcp:// ...   Up      4004/tcp 
     
     ## Comprobar procesos
-    vthot4@labcell:~/sawtooth$ docker-compose -f sawtooth-default.yaml top
+    vthot4@labcell:~/sawtooth-lab/one_node$ docker-compose -f sawtooth-default.yaml top
 
     ## Comprobar dockers levantados
-    vthot4@labcell:~/sawtooth$ docker ps -a
+    vthot4@labcell:~/sawtooth-lab/one_node$ docker ps -a
 CONTAINER ID        IMAGE                                            COMMAND                  CREATED             STATUS              PORTS                              NAMES
 5d63ef8c11c4        hyperledger/sawtooth-shell:chime                 "bash -c 'sawtooth k…"   9 minutes ago       Up 9 minutes        4004/tcp, 8008/tcp                 sawtooth-shell-default
 1ea47e9ffa4b        hyperledger/sawtooth-intkey-tp-python:chime      "intkey-tp-python -v…"   9 minutes ago       Up 9 minutes        4004/tcp                           sawtooth-intkey-tp-python-default
@@ -63,7 +63,7 @@ Tenemos varias opciones para ver los logs de salida del entorno:
 
 ```bash
     ## Ver la salida completa de los logs.
-    vthot4@labcell:~/sawtooth$ docker-compose -f sawtooth-default.yaml logs
+    vthot4@labcell:~/sawtooth-lab/one_node$ docker-compose -f sawtooth-default.yaml logs
     ...............
     sawtooth-settings-tp-default | INFO  | sawtooth_sdk::proces | TP_PROCESS_REQUEST sending TpProcessResponse: OK
     sawtooth-shell-default | creating key directory: /root/.sawtooth/keys
@@ -81,11 +81,11 @@ Tenemos varias opciones para ver los logs de salida del entorno:
     ...............
 
     ## Si queremos verlos en tiempo de ejecución
-    vthot4@labcell:~/sawtooth$ docker-compose -f sawtooth-default.yaml logs -f
+    vthot4@labcell:~/sawtooth-lab/one_node$ docker-compose -f sawtooth-default.yaml logs -f
 
     ## Si queremos ver los logs de un contenedor específico
-    vthot4@labcell:~/sawtooth$ docker log ${CONTAINER_ID}
-    vthot4@labcell:~/sawtooth$ docker log ${CONTAINER_ID} -f
+    vthot4@labcell:~/sawtooth-lab/one_node$ docker log ${CONTAINER_ID}
+    vthot4@labcell:~/sawtooth-lab/one_node$ log ${CONTAINER_ID} -f
 
 ```
 
@@ -94,7 +94,7 @@ Tenemos varias opciones para ver los logs de salida del entorno:
 Sawtooth incluye comandos que nos sirven para emular a un cliente. Este cliente interactuará con el validador a través del REST API. Para hacer alguna prueba vamos a entrar en la consola del cliente:
 
 ```bash
-    vthot4@labcell:~/sawtooth$ docker exec -it sawtooth-shell-default bash
+    vthot4@labcell:~/sawtooth-lab/one_node$ docker exec -it sawtooth-shell-default bash
     root@5d63ef8c11c4:/# intkey
     intkey            intkey-tp-python 
 
@@ -113,7 +113,7 @@ Sawtooth incluye comandos que nos sirven para emular a un cliente. Este cliente 
 Esta información también la podemos obtener desde nuestro host ya que tenemos expuestos los puertos del REST-API:
 
 ```bash
-    vthot4@labcell:~/sawtooth$ curl http://localhost:8008/blocks
+    vthot4@labcell:~/sawtooth-lab/one_node$ curl http://localhost:8008/blocks
     {
     "data": [
         {
@@ -128,10 +128,10 @@ Esta información también la podemos obtener desde nuestro host ya que tenemos 
 Podemos entrar a revisar el contenido de cualquier docker mediante:
 
 ```bash
-    vthot4@labcell:~/sawtooth$ docker exec -it {ContainerName} bash
+    vthot4@labcell:~/sawtooth-lab/one_node$ docker exec -it {ContainerName} bash
 
     ## Ejemplo
-    vthot4@labcell:~/sawtooth$ docker exec -it sawtooth-validator-default bash
+    vthot4@labcell:~/sawtooth-lab/one_node$ docker exec -it sawtooth-validator-default bash
 
 ``` 
 

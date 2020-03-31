@@ -72,7 +72,7 @@ mientras no borremos el volumen que se crea
 Para levantar el entorno usaremos el fichero de configuración: **sawtooth-default-pbft.yaml**
 
 ```bash
-    vthot4@labcell:~/Trazabilidad/infrastructure/developer/Docker$ docker-compose -f sawtooth-default-pbft.yaml up -d 
+    vthot4@labcell:~/sawtooth-lab/docker/red_pbft$ docker-compose -f sawtooth-default-pbft.yaml up -d 
         Creating network "docker_default" with the default driver
         Creating sawtooth-validator-default-0        ... done
         Creating sawtooth-intkey-tp-python-default-2 ... done
@@ -118,7 +118,7 @@ Si todo ha ido bien nos habrá creado 31 dockers:
 - 1 Sawtooth-shell
 
 ```bash
-        vthot4@labcell:~/Trazabilidad/infrastructure/developer/Docker$ docker-compose -f sawtooth-default-pbft.yaml ps
+        vthot4@labcell:~/sawtooth-lab/docker/red_pbft$ docker-compose -f sawtooth-default-pbft.yaml ps
                     Name                              Command               State              Ports            
         -----------------------------------------------------------------------------------------------------------
         sawtooth-intkey-tp-python-default-0   intkey-tp-python -C tcp:// ...   Up      4004/tcp                    
@@ -170,7 +170,7 @@ Si todo ha ido bien nos habrá creado 31 dockers:
 Nos conectamos al shell container:
 
 ```bash
-    vthot4@labcell:~/Docker$ docker exec -it sawtooth-shell-default bash
+    vthot4@labcell:~/sawtooth-lab/docker/red_pbft$ docker exec -it sawtooth-shell-default bash
     root@7063cc7095ac:/# 
 ```
 Para verificar si se ha producido el emparejamiento de los nodos:
@@ -225,7 +225,7 @@ Vamos a mandar una transacción simple para ver como se comporta:
 Si todo ha ido bien, podemos proceder a parar la red.
 
 ```
-    vthot4@labcell:~/Trazabilidad/infrastructure/developer/Docker$ docker-compose -f sawtooth-default-pbft.yaml down
+    vthot4@labcell:~/sawtooth-lab/docker/red_pbft$ docker-compose -f sawtooth-default-pbft.yaml down
 ```
 
 
