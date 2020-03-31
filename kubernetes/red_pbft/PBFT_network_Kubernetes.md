@@ -10,7 +10,7 @@ y los demás elementos necesarios. El esquema de la red que vamos a montar es el
 Comenzamos levantando nuestro entorno de desarrollo con Minikube:
 
 ```bash
-    vthot4@labcell:~/adr/Trazabilidad/Trazabilidad/infrastructure/developer/kubernetes/PBFT$ minikube start
+    vthot4@labcell:~/sawtooth-lab/kubernetes/one_node$ minikube start
     😄  minikube v1.3.0 on Ubuntu 18.04
     🔥  Creating virtualbox VM (CPUs=2, Memory=4096MB, Disk=20000MB) ...
     🐳  Preparing Kubernetes v1.15.2 on Docker 18.09.8 ...
@@ -97,11 +97,11 @@ Comenzaremos creando las keys de nuestros futuros nodos:
 
 ```bash
     ## Creamos las claves. Si queremos crear más nodos batará con cambiar el "for i in {0..4};" 
-    vthot4@labcell:~/developer/kubernetes/PBFT$ kubectl apply -f sawtooth-create-pbft-keys.yaml
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl apply -f sawtooth-create-pbft-keys.yaml
     job.batch/pbft-keys created
 
     ## Obtenemos el nombre del pod que se ha ejecutado
-    vthot4@labcell:~/developer/kubernetes/PBFT$ kubectl get pods |grep pbft-keys
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl get pods |grep pbft-keys
     pbft-keys-hh8jw   0/1     ContainerCreating   0          19s
 
     ## Obtenemos las claves que necesitamos.
@@ -156,20 +156,20 @@ Una vez obtenidas las claves, deberemos completar el fichero *pbft-keys-configma
 Aplicamos el ConfigMap que la red de Sawtooth va a usar.
 
 ```bash
-vthot4@labcell:~/developer/kubernetes/PBFT$ kubectl apply -f pbft-keys-configmap.yaml 
+vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl apply -f pbft-keys-configmap.yaml 
 configmap/keys-config created
 ```
 
 Comprobamos lo que hemos creado:
 
 ```bash
-    vthot4@labcell:~/developer/kubernetes/PBFT$ kubectl get configmaps
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl get configmaps
     NAME          DATA   AGE
     keys-config   10     4m41s
 ```
 
 ```yaml
-vthot4@labcell:~/adr/Trazabilidad/Trazabilidad/infrastructure/developer/kubernetes/PBFT$ kubectl get configmaps keys-config -o yaml
+vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl get configmaps keys-config -o yaml
 apiVersion: v1
 data:
   pbft0priv: bfb5afeef2c1137a729e908f49accf2e7355c37189c78f4b6fd6c370b4798b88
@@ -201,7 +201,7 @@ metadata:
 Para levantar la red desplegamos el siguiente .yaml
 
 ```bash
-    vthot4@labcell:~/developer/kubernetes/PBFT$ kubectl apply -f sawtooth-kubernetes-default-pbft.yaml
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl apply -f sawtooth-kubernetes-default-pbft.yaml
     deployment.extensions/pbft-0 created
     service/sawtooth-0 created
     deployment.extensions/pbft-1 created
@@ -216,7 +216,7 @@ Para levantar la red desplegamos el siguiente .yaml
 Comprobamos que todo ha ido bien:
 
 ```bash
-    vthot4@labcell:~/developer/kubernetes/PBFT$ kubectl get pods
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl get pods
     NAME                      READY   STATUS      RESTARTS   AGE
     pbft-0-79cc7b8d6f-nbql9   8/8     Running     0          2m44s
     pbft-1-74f4969c5-5vn9k    8/8     Running     0          2m44s
@@ -226,13 +226,13 @@ Comprobamos que todo ha ido bien:
     pbft-keys-hh8jw           0/1     Completed   0          34m
 
     ## Podemos ver los containers de un pod específico
-        vthot4@labcell:~/developer/kubernetes/PBFT$ kubectl get pods pbft-0-79cc7b8d6f-nbql9 -o jsonpath={.spec.containers[*].name}
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl get pods pbft-0-79cc7b8d6f-nbql9 -o jsonpath={.spec.containers[*].name}
     sawtooth-intkey-tp-python sawtooth-pbft-engine sawtooth-rest-api sawtooth-settings-tp sawtooth-shell sawtooth-smallbank-tp-rust sawtooth-validator sawtooth-xo-tp-python
 ```
 Vamos a probar si la red de Sawtooth funciona correctamente, para ello vamos a conectarnos al container shell del primer pod:
  
 ```bash
-    vthot4@labcell:~/developer/kubernetes/PBFT$ kubectl exec -it pbft-0-79cc7b8d6f-nbql9 --container sawtooth-shell -- bash
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl exec -it pbft-0-79cc7b8d6f-nbql9 --container sawtooth-shell -- bash
     root@pbft-0-79cc7b8d6f-nbql9:/#
 
     ## Comprobamos los bloques de la cadena
@@ -259,7 +259,7 @@ Vamos a probar si la red de Sawtooth funciona correctamente, para ello vamos a c
 En otro terminal vamos a conectarnos a otro de los nodos:
 
 ```bash
-    vthot4@labcell:~/adr/Trazabilidad/Trazabilidad/infrastructure/developer/kubernetes/PBFT$ kubectl exec -it pbft-1-74f4969c5-5vn9k --container sawtooth-shell -- bash
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl exec -it pbft-1-74f4969c5-5vn9k --container sawtooth-shell -- bash
     root@pbft-1-74f4969c5-5vn9k:/#
 ```
 
@@ -288,12 +288,12 @@ La prueba que vamos a hacer es ultramegasencilla, mandaremos una clave valor des
 Si simplemente lo queremos parar para levantarlo con la misma configuración, bastará con ejecutar:
 
 ```bash
-    vthot4@labcell:~/developer/kubernetes/PBFT$ minikube stop
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ minikube stop
 ```
 Si preferimos borrarlo todo, bastara con seguir los sigueintes pasos:
 
 ```bash
-    vthot4@labcell:~/developer/kubernetes/PBFT$ kubectl delete -f sawtooth-kubernetes-default-pbft.yaml
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ kubectl delete -f sawtooth-kubernetes-default-pbft.yaml
     deployment.extensions "pbft-0" deleted
     service "sawtooth-0" deleted
     deployment.extensions "pbft-1" deleted
@@ -305,11 +305,11 @@ Si preferimos borrarlo todo, bastara con seguir los sigueintes pasos:
     deployment.extensions "pbft-4" deleted
     service "sawtooth-4" deleted
 
-    vthot4@labcell:~/developer/kubernetes/PBFT$ minikube stop
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ minikube stop
 ✋  Stopping "minikube" in virtualbox ...
 🛑  "minikube" stopped.
 
-    vthot4@labcell:~/developer/kubernetes/PBFT$ minikube delete
+    vthot4@labcell:~/sawtooth-lab/kubernetes/red_pbft$ minikube delete
     🔥  Deleting "minikube" in virtualbox ...
     💔  The "minikube" cluster has been deleted.
 ```
